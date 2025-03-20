@@ -176,6 +176,7 @@ pub fn available_color_count() -> u16 {
         .map_or(DEFAULT, |x| match x {
             _ if x.contains("24bit") || x.contains("truecolor") => u16::MAX,
             _ if x.contains("256") => 256,
+            _ if x.contains("16") => 16,
             _ => DEFAULT,
         })
 }
@@ -593,6 +594,17 @@ mod tests {
             [("COLORTERM", None), ("TERM", Some("xterm-256color"))],
             || {
                 assert_eq!(256u16, available_color_count());
+            },
+        );
+    }
+
+    #[test]
+    fn term_16color() {
+        skip_windows_ansi_supported!();
+        temp_env::with_vars(
+            [("COLORTERM", None), ("TERM", Some("linux-16color"))],
+            || {
+                assert_eq!(16u16, available_color_count());
             },
         );
     }
