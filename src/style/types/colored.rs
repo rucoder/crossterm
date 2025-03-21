@@ -96,6 +96,7 @@ impl Colored {
 impl fmt::Display for Colored {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let color;
+        let mut fg = false;
 
         if Self::ansi_color_disabled_memoized() {
             return Ok(());
@@ -106,15 +107,16 @@ impl fmt::Display for Colored {
                 if new_color == Color::Reset {
                     return f.write_str("39");
                 } else {
-                    f.write_str("38;")?;
+                    f.write_str("3")?;
                     color = new_color;
+                    fg = true;
                 }
             }
             Colored::BackgroundColor(new_color) => {
                 if new_color == Color::Reset {
                     return f.write_str("49");
                 } else {
-                    f.write_str("48;")?;
+                    f.write_str("4")?;
                     color = new_color;
                 }
             }
@@ -128,26 +130,50 @@ impl fmt::Display for Colored {
             }
         }
 
-        match color {
-            Color::Black => f.write_str("5;0"),
-            Color::DarkGrey => f.write_str("5;8"),
-            Color::Red => f.write_str("5;9"),
-            Color::DarkRed => f.write_str("5;1"),
-            Color::Green => f.write_str("5;10"),
-            Color::DarkGreen => f.write_str("5;2"),
-            Color::Yellow => f.write_str("5;11"),
-            Color::DarkYellow => f.write_str("5;3"),
-            Color::Blue => f.write_str("5;12"),
-            Color::DarkBlue => f.write_str("5;4"),
-            Color::Magenta => f.write_str("5;13"),
-            Color::DarkMagenta => f.write_str("5;5"),
-            Color::Cyan => f.write_str("5;14"),
-            Color::DarkCyan => f.write_str("5;6"),
-            Color::White => f.write_str("5;15"),
-            Color::Grey => f.write_str("5;7"),
-            Color::Rgb { r, g, b } => write!(f, "2;{r};{g};{b}"),
-            Color::AnsiValue(val) => write!(f, "5;{val}"),
-            _ => Ok(()),
+        if !fg {
+            match color {
+                Color::Black => f.write_str("0;5"),
+                Color::DarkGrey => f.write_str("0;25"),
+                Color::Red => f.write_str("1;25"),
+                Color::DarkRed => f.write_str("1;5"),
+                Color::Green => f.write_str("2;25"),
+                Color::DarkGreen => f.write_str("2;5"),
+                Color::Yellow => f.write_str("3;25"),
+                Color::DarkYellow => f.write_str("3;5"),
+                Color::Blue => f.write_str("4;25"),
+                Color::DarkBlue => f.write_str("4;5"),
+                Color::Magenta => f.write_str("5;25"),
+                Color::DarkMagenta => f.write_str("5;5"),
+                Color::Cyan => f.write_str("6;25"),
+                Color::DarkCyan => f.write_str("6;5"),
+                Color::White => f.write_str("7;25"),
+                Color::Grey => f.write_str("7;5"),
+                Color::Rgb { r, g, b } => write!(f, "2;{r};{g};{b}"),
+                Color::AnsiValue(val) => write!(f, "5;{val}"),
+                _ => Ok(()),
+            }
+        } else {
+            match color {
+                Color::Black => f.write_str("0;1"),
+                Color::DarkGrey => f.write_str("0;22"),
+                Color::Red => f.write_str("1;22"),
+                Color::DarkRed => f.write_str("1;1"),
+                Color::Green => f.write_str("2;22"),
+                Color::DarkGreen => f.write_str("2;1"),
+                Color::Yellow => f.write_str("3;22"),
+                Color::DarkYellow => f.write_str("3;1"),
+                Color::Blue => f.write_str("4;22"),
+                Color::DarkBlue => f.write_str("4;1"),
+                Color::Magenta => f.write_str("5;22"),
+                Color::DarkMagenta => f.write_str("5;1"),
+                Color::Cyan => f.write_str("6;22"),
+                Color::DarkCyan => f.write_str("6;1"),
+                Color::White => f.write_str("7;22"),
+                Color::Grey => f.write_str("7;1"),
+                Color::Rgb { r, g, b } => write!(f, "2;{r};{g};{b}"),
+                Color::AnsiValue(val) => write!(f, "5;{val}"),
+                _ => Ok(()),
+            }
         }
     }
 }

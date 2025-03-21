@@ -208,6 +208,17 @@ pub struct SetForegroundColor(pub Color);
 
 impl Command for SetForegroundColor {
     fn write_ansi(&self, f: &mut impl fmt::Write) -> fmt::Result {
+        // open file
+        // let mut stdout = std::fs::OpenOptions::new()
+        //     .write(true)
+        //     .create(true)
+        //     .append(true)
+        //     .open("/home/mikem/aaaa")
+        //     .unwrap();
+
+        // let _ = writeln!(stdout, "{:?}", Colored::BackgroundColor(self.0));
+        // let _ = writeln!(stdout, "{}m", Colored::BackgroundColor(self.0));
+
         write!(f, csi!("{}m"), Colored::ForegroundColor(self.0))
     }
 
@@ -229,9 +240,21 @@ impl Command for SetForegroundColor {
 /// Commands must be executed/queued for execution otherwise they do nothing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SetBackgroundColor(pub Color);
-
+// use std::io::Write;
 impl Command for SetBackgroundColor {
     fn write_ansi(&self, f: &mut impl fmt::Write) -> fmt::Result {
+        // erite to stdout for debugging
+
+        // open file
+        // let mut stdout = std::fs::OpenOptions::new()
+        //     .write(true)
+        //     .create(true)
+        //     .append(true)
+        //     .open("/home/mikem/aaaa")
+        //     .unwrap();
+
+        // let _ = writeln!(stdout, "{:?}", Colored::BackgroundColor(self.0));
+        // let _ = writeln!(stdout, "{}m", Colored::BackgroundColor(self.0));
         write!(f, csi!("{}m"), Colored::BackgroundColor(self.0))
     }
 
